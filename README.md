@@ -49,5 +49,5 @@ fmt.Printf("%v", string(bytes))
 ### Features
 
 - Simple interface
-- Schema less
-- Preserving order
+- Schema-less
+- Preserving order of map structure
