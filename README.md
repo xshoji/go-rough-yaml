@@ -5,16 +5,16 @@ go-rough-yaml provide accessors to edit yaml data.
 ```go
 var yamlString = `
 ddd:
-ccc:
-c: value-c
-a: value-a
-bbb:
-- 10
-- 5
+  ccc:
+    c: value-c
+    a: value-a
+  bbb:
+  - 10
+  - 5
 aaa:
-zzz: value-zzz
-yyy: value-yyy
-xxx: value-xxx
+  zzz: value-zzz
+  yyy: value-yyy
+  xxx: value-xxx
 `
 mapSlice := &yaml.MapSlice{}
 yaml.Unmarshal([]byte(yamlString), mapSlice)
