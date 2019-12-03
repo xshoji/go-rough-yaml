@@ -25,10 +25,10 @@
 #   unused-packages = true
 
 
+[[constraint]]
+  name = "gopkg.in/yaml.v2"
+  version = "2.2.7"
+
 [prune]
   go-tests = true
   unused-packages = true
-
-[[constraint]]
-  branch = "master"
-  name = "github.com/golang/glog"

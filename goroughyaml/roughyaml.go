@@ -14,6 +14,12 @@ type roughYaml struct {
 	isRoot      bool
 }
 
+func FromYaml(yamlContent string) roughYaml {
+	mapSlice := &yaml.MapSlice{}
+	yaml.Unmarshal([]byte(yamlContent), mapSlice)
+	return NewRoughYaml(mapSlice)
+}
+
 func NewRoughYaml(yamlData interface{}) roughYaml {
 	rootMapItem := yaml.MapItem{Key: "root", Value: yamlData}
 	rootMapSlice := yaml.MapSlice{rootMapItem}
@@ -38,6 +44,11 @@ func createRoughYaml(parent *roughYaml, item *yaml.MapItem, yamlData interface{}
 		currentItem: item,
 		isRoot:      false,
 	}
+}
+
+func (o *roughYaml) ToYaml() string {
+	bytes, _ := yaml.Marshal(o.GetContents())
+	return string(bytes)
 }
 
 func (o *roughYaml) GetContents() interface{} {
@@ -76,19 +87,19 @@ func (o *roughYaml) Parent() *roughYaml {
 }
 
 func (o *roughYaml) Get(key string) *roughYaml {
-	dumpNode("o.GetContents", o.GetContents())
-	fmt.Printf(">> o.contents : %T, %v\n", o.contents, o.contents)
+	//dumpNode("o.GetContents", o.GetContents())
+	//fmt.Printf(">> o.contents : %T, %v\n", o.contents, o.contents)
 	if o.contents == nil {
 		return createRoughYaml(o, nil, nil)
 	}
 	mapSlice, ok := o.GetContents().(*yaml.MapSlice)
-	fmt.Printf("-- o.contents.(yaml.MapSlice)\n")
-	fmt.Printf("---- mapSlice	: %T, %p, %v\n", mapSlice, mapSlice, mapSlice)
-	fmt.Printf("---- ok : %v\n", ok)
+	//fmt.Printf("-- o.contents.(yaml.MapSlice)\n")
+	//fmt.Printf("---- mapSlice	: %T, %p, %v\n", mapSlice, mapSlice, mapSlice)
+	//fmt.Printf("---- ok : %v\n", ok)
 	if ok {
 		for index, item := range *mapSlice {
 			referencedItem := &(*mapSlice)[index]
-			fmt.Printf("---- item.Value: %T, item: %p, key: %v, value: %v, value-pointer: %p, value-pointers pointer: %v\n", referencedItem.Value, referencedItem, referencedItem.Key, referencedItem.Value, referencedItem.Value, &referencedItem.Value)
+			//fmt.Printf("---- item.Value: %T, item: %p, key: %v, value: %v, value-pointer: %p, value-pointers pointer: %v\n", referencedItem.Value, referencedItem, referencedItem.Key, referencedItem.Value, referencedItem.Value, &referencedItem.Value)
 			if referencedItem.Key == key {
 				v, ok := referencedItem.Value.(yaml.MapSlice)
 				if ok {
@@ -99,22 +110,22 @@ func (o *roughYaml) Get(key string) *roughYaml {
 		}
 	}
 	slice, ok := o.GetContents().(*interface{})
-	fmt.Printf("--o.contents.(*interface{})\n")
-	fmt.Printf("---- slice : %T, %v\n", slice, slice)
-	fmt.Printf("---- ok : %v\n", ok)
+	//fmt.Printf("--o.contents.(*interface{})\n")
+	//fmt.Printf("---- slice : %T, %v\n", slice, slice)
+	//fmt.Printf("---- ok : %v\n", ok)
 	if ok {
 		// > go - range over interface{} which stores a slice - Stack Overflow
 		// > https://stackoverflow.com/questions/14025833/range-over-interface-which-stores-a-slice?answertab=active#tab-top
 		switch reflect.TypeOf(*slice).Kind() {
 		case reflect.Slice:
-			fmt.Printf(">> slice is slice!\n")
+			//fmt.Printf(">> slice is slice!\n")
 			s := reflect.ValueOf(*slice)
 			for i := 0; i < s.Len(); i++ {
 				index := strconv.FormatInt(int64(i), 10)
-				fmt.Printf("---- index : %v, key : %v\n", index, key)
-				fmt.Printf("---- index == key : %v\n", index == key)
+				//fmt.Printf("---- index : %v, key : %v\n", index, key)
+				//fmt.Printf("---- index == key : %v\n", index == key)
 				if index == key {
-					fmt.Printf("---- item: %T\n", s.Index(i).Interface())
+					//fmt.Printf("---- item: %T\n", s.Index(i).Interface())
 					v := yaml.MapItem{Key: nil, Value: s.Index(i).Interface()}
 					return createRoughYaml(o, &v, &v.Value)
 				}

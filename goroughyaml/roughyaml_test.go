@@ -7,7 +7,29 @@ import (
 	"testing"
 )
 
-func _TestGetContents(t *testing.T) {
+func TestFromYaml(t *testing.T) {
+	//---------------------
+	// init
+	yamlString := `
+aaa:
+  bbb:
+    bbb1: bbb
+  ccc:
+    - 1
+`
+	roughYaml := FromYaml(yamlString)
+
+	//---------------------
+	// success (yaml.MapSlice)
+	v1 := roughYaml.Get("aaa").Get("bbb").Get("bbb1").Value().(string)
+	v2 := roughYaml.Get("aaa").Get("ccc").Get("0").Value().(int)
+	if v1 != "bbb" || v2 != 1 {
+		t.Errorf("<< FAILED >>> : orderedMapSlice.Get(\"aaa\").GetContents() is not yaml.MapSlice")
+	}
+	t.Logf("%v\n", roughYaml.GetContents())
+}
+
+func TestGetContents(t *testing.T) {
 	//---------------------
 	// init
 	yamlString := `
@@ -32,8 +54,9 @@ aaa:
 	actualValue = orderedMapSlice.Get("aaa").GetContents()
 	_, ok := actualValue.(*yaml.MapSlice)
 	if !ok {
-		t.Fatalf("orderedMapSlice.Get(\"aaa\").GetContents() is not yaml.MapSlice")
+		t.Errorf("<< FAILED >>> : orderedMapSlice.Get(\"aaa\").GetContents() is not yaml.MapSlice")
 	}
+	t.Logf("%v\n", actualValue)
 
 	//---------------------
 	// success (slice)
@@ -42,11 +65,12 @@ aaa:
 	switch reflect.TypeOf(*actualValuePtr).Kind() {
 	case reflect.Slice:
 	default:
-		t.Fatalf("orderedMapSlice.Get(\"aaa\").Get(\"ccc\").GetContents() is not []interface{}")
+		t.Errorf("<< FAILED >>> : orderedMapSlice.Get(\"aaa\").Get(\"ccc\").GetContents() is not []interface{}")
 	}
+	t.Logf("%v\n", orderedMapSlice)
 }
 
-func _TestGet(t *testing.T) {
+func TestGet(t *testing.T) {
 	//---------------------
 	// init
 	yamlString := `
@@ -235,22 +259,22 @@ aaa:
 	bytes, _ = yaml.Marshal(orderedMapSlice.GetContents())
 	fmt.Printf("---\n%v\n\n", string(bytes))
 
-	//---------------------
-	// success (set slice value)
-	expectedKey = nil
-	expectedValue = 5
-	orderedMapSlice.Get("aaa").Get("ccc").Set("1", 5)
-	actualKey = orderedMapSlice.Get("aaa").Get("ccc").Get("1").Key()
-	actualValue = orderedMapSlice.Get("aaa").Get("ccc").Get("1").Value().(int)
-	if actualKey != expectedKey || actualValue != expectedValue {
-		t.Errorf("<< FAILED >>> ")
-	}
-	t.Logf("actualKey:%v, expectedKey:%v | actualValue:%v, expectedValue:%v\n", actualKey, expectedKey, actualValue, expectedValue)
-	bytes, _ = yaml.Marshal(orderedMapSlice.GetContents())
-	fmt.Printf("---\n%v\n\n", string(bytes))
+	////---------------------
+	//// success (set slice value)
+	//expectedKey = nil
+	//expectedValue = 5
+	//orderedMapSlice.Get("aaa").Get("ccc").Set("1", 5)
+	//actualKey = orderedMapSlice.Get("aaa").Get("ccc").Get("1").Key()
+	//actualValue = orderedMapSlice.Get("aaa").Get("ccc").Get("1").Value().(int)
+	//if actualKey != expectedKey || actualValue != expectedValue {
+	//	t.Errorf("<< FAILED >>> ")
+	//}
+	//t.Logf("actualKey:%v, expectedKey:%v | actualValue:%v, expectedValue:%v\n", actualKey, expectedKey, actualValue, expectedValue)
+	//bytes, _ = yaml.Marshal(orderedMapSlice.GetContents())
+	//fmt.Printf("---\n%v\n\n", string(bytes))
 }
 
-func _TestSetSlice(t *testing.T) {
+func TestSetSlice(t *testing.T) {
 	//---------------------
 	// init
 	yamlString := `
