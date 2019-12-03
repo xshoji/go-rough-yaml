@@ -107,7 +107,7 @@ aaa:
 	actualKey = orderedMapSlice.Get("aaa").Get("bbb").Get("bbb1").Key().(string)
 	actualValue = orderedMapSlice.Get("aaa").Get("bbb").Get("bbb1").Value().(string)
 	if actualKey != expectedKey || actualValue != expectedValue {
-		t.Errorf("<< FAILED >>> ")
+		t.Errorf("<< FAILED >>>")
 	}
 	t.Logf("actualKey:%v, expectedKey:%v | actualValue:%v, expectedValue:%v\n", actualKey, expectedKey, actualValue, expectedValue)
 
@@ -118,7 +118,7 @@ aaa:
 	actualKey = orderedMapSlice.Get("aaa").Get("bbb").Get("bbb2").Key().(string)
 	actualValue = orderedMapSlice.Get("aaa").Get("bbb").Get("bbb2").Value().(int)
 	if actualKey != expectedKey || actualValue != expectedValue {
-		t.Errorf("<< FAILED >>> ")
+		t.Errorf("<< FAILED >>>")
 	}
 	t.Logf("actualKey:%v, expectedKey:%v | actualValue:%v, expectedValue:%v\n", actualKey, expectedKey, actualValue, expectedValue)
 
@@ -129,7 +129,7 @@ aaa:
 	actualKey = orderedMapSlice.Get("aaa").Get("ccc").Key().(string)
 	actualValueList = orderedMapSlice.Get("aaa").Get("ccc").Value().([]interface{})
 	if actualKey != expectedKey || !compareSlice(actualValueList, expectedValueList) {
-		t.Errorf("<< FAILED >>> ")
+		t.Errorf("<< FAILED >>>")
 	}
 	t.Logf("actualKey:%v, expectedKey:%v | actualValueList:%v, expectedValueList:%v\n", actualKey, expectedKey, actualValueList, expectedValueList)
 
@@ -140,7 +140,7 @@ aaa:
 	actualKey = orderedMapSlice.Get("aaa").Get("ccc").Get("1").Key()
 	actualValue = orderedMapSlice.Get("aaa").Get("ccc").Get("1").Value().(int)
 	if actualKey != expectedKey || actualValue != expectedValue {
-		t.Errorf("<< FAILED >>> ")
+		t.Errorf("<< FAILED >>>")
 	}
 	t.Logf("actualKey:%v, expectedKey:%v | actualValue:%v, expectedValue:%v\n", actualKey, expectedKey, actualValue, expectedValue)
 
@@ -151,7 +151,7 @@ aaa:
 	actualKey = orderedMapSlice.Get("aaa").Get("ddd").Get("1").Get("1").Key()
 	actualValue = orderedMapSlice.Get("aaa").Get("ddd").Get("1").Get("1").Value().(int)
 	if actualKey != expectedKey || actualValue != expectedValue {
-		t.Errorf("<< FAILED >>> ")
+		t.Errorf("<< FAILED >>>")
 	}
 	t.Logf("actualKey:%v, expectedKey:%v | actualValue:%v, expectedValue:%v\n", actualKey, expectedKey, actualValue, expectedValue)
 
@@ -162,7 +162,7 @@ aaa:
 	actualKey = orderedMapSlice.Get("xxx").Key()
 	actualValue = orderedMapSlice.Get("xxx").Value()
 	if actualKey != expectedKey || actualValue != expectedValue {
-		t.Errorf("<< FAILED >>> ")
+		t.Errorf("<< FAILED >>>")
 	}
 	t.Logf("actualKey:%v, expectedKey:%v | actualValue:%v, expectedValue:%v\n", actualKey, expectedKey, actualValue, expectedValue)
 
@@ -173,7 +173,7 @@ aaa:
 	actualKey = orderedMapSlice.Get("xxx").Get("yyy").Get("zzz").Key()
 	actualValue = orderedMapSlice.Get("xxx").Get("yyy").Get("zzz").Value()
 	if actualKey != expectedKey || actualValue != expectedValue {
-		t.Errorf("<< FAILED >>> ")
+		t.Errorf("<< FAILED >>>")
 	}
 	t.Logf("actualKey:%v, expectedKey:%v | actualValue:%v, expectedValue:%v\n", actualKey, expectedKey, actualValue, expectedValue)
 }
@@ -207,7 +207,7 @@ aaa:
 	actualKey = orderedMapSlice.Get("aaa").Get("bbb").Get("bbb1").Key().(string)
 	actualValue = orderedMapSlice.Get("aaa").Get("bbb").Get("bbb1").Value().(string)
 	if actualKey != expectedKey || actualValue != expectedValue {
-		t.Errorf("<< FAILED >>> ")
+		t.Errorf("<< FAILED >>>")
 	}
 	t.Logf("actualKey:%v, expectedKey:%v | actualValue:%v, expectedValue:%v\n", actualKey, expectedKey, actualValue, expectedValue)
 	bytes, _ := yaml.Marshal(orderedMapSlice.GetContents())
@@ -221,7 +221,7 @@ aaa:
 	actualKey = orderedMapSlice.Get("aaa").Get("bbb").Get("bbb1").Key().(string)
 	actualValue = orderedMapSlice.Get("aaa").Get("bbb").Get("bbb1").Value()
 	if actualKey != expectedKey || actualValue != expectedValue {
-		t.Errorf("<< FAILED >>> ")
+		t.Errorf("<< FAILED >>>")
 	}
 	t.Logf("actualKey:%v, expectedKey:%v | actualValue:%v, expectedValue:%v\n", actualKey, expectedKey, actualValue, expectedValue)
 	bytes, _ = yaml.Marshal(orderedMapSlice.GetContents())
@@ -235,7 +235,7 @@ aaa:
 	actualKey = orderedMapSlice.Get("aaa").Get("bbb").Key().(string)
 	actualValue = orderedMapSlice.Get("aaa").Get("bbb").Value()
 	if actualKey != expectedKey || actualValue != expectedValue {
-		t.Errorf("<< FAILED >>> ")
+		t.Errorf("<< FAILED >>>")
 	}
 	t.Logf("actualKey:%v, expectedKey:%v | actualValue:%v, expectedValue:%v\n", actualKey, expectedKey, actualValue, expectedValue)
 	bytes, _ = yaml.Marshal(orderedMapSlice.GetContents())
@@ -253,7 +253,7 @@ aaa:
 	actualKey = orderedMapSlice.Get("aaa").Get("bbb").Get("key-a").Key().(string)
 	actualValue = orderedMapSlice.Get("aaa").Get("bbb").Get("key-a").Value().(string)
 	if actualKey != expectedKey || actualValue != expectedValue {
-		t.Errorf("<< FAILED >>> ")
+		t.Errorf("<< FAILED >>>")
 	}
 	t.Logf("actualKey:%v, expectedKey:%v | actualValue:%v, expectedValue:%v\n", actualKey, expectedKey, actualValue, expectedValue)
 	bytes, _ = yaml.Marshal(orderedMapSlice.GetContents())
@@ -267,7 +267,7 @@ aaa:
 	//actualKey = orderedMapSlice.Get("aaa").Get("ccc").Get("1").Key()
 	//actualValue = orderedMapSlice.Get("aaa").Get("ccc").Get("1").Value().(int)
 	//if actualKey != expectedKey || actualValue != expectedValue {
-	//	t.Errorf("<< FAILED >>> ")
+	//	t.Errorf("<< FAILED >>>")
 	//}
 	//t.Logf("actualKey:%v, expectedKey:%v | actualValue:%v, expectedValue:%v\n", actualKey, expectedKey, actualValue, expectedValue)
 	//bytes, _ = yaml.Marshal(orderedMapSlice.GetContents())
@@ -299,7 +299,7 @@ aaa:
 	actualKey = orderedMapSlice.Get("aaa").Get("bbb").Get("bbb1").Key().(string)
 	actualValueList = orderedMapSlice.Get("aaa").Get("bbb").Get("bbb1").Value().([]interface{})
 	if actualKey != expectedKey || !compareSlice(actualValueList, expectedValueList) {
-		t.Errorf("<< FAILED >>> ")
+		t.Errorf("<< FAILED >>>")
 	}
 	t.Logf("actualKey:%v, expectedKey:%v | actualValueList:%v, expectedValueList:%v\n", actualKey, expectedKey, actualValueList, expectedValueList)
 	bytes, _ := yaml.Marshal(orderedMapSlice.GetContents())
@@ -313,7 +313,7 @@ aaa:
 	actualKey = orderedMapSlice.Get("aaa").Get("bbb").Get("bbb1").Key().(string)
 	actualValueList = orderedMapSlice.Get("aaa").Get("bbb").Get("bbb1").Value().([]interface{})
 	if actualKey != expectedKey || !compareSlice(actualValueList, expectedValueList) {
-		t.Errorf("<< FAILED >>> ")
+		t.Errorf("<< FAILED >>>")
 	}
 	t.Logf("actualKey:%v, expectedKey:%v | actualValueList:%v, expectedValueList:%v\n", actualKey, expectedKey, actualValueList, expectedValueList)
 	bytes, _ = yaml.Marshal(orderedMapSlice.GetContents())
