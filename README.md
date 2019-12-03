@@ -1,6 +1,8 @@
 # go-rough-yaml
 
-go-rough-yaml provide accessors to edit yaml data.
+go-rough-yaml provides simple accessors to edit yaml.  
+This means that you haven't to prepare a struct type.  
+Additionally, go-rough-yaml preserves order of map structures, so that when yaml is reverted to string, the keys of map doesn't sort.
 
 ```go
 // create RoughYaml
