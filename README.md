@@ -3,7 +3,8 @@
 go-rough-yaml provide accessors to edit yaml data.
 
 ```go
-var yamlString = `
+// create RoughYaml
+roughYaml := goroughyaml.FromYaml(`
 ddd:
   ccc:
     c: value-c
@@ -15,18 +16,23 @@ aaa:
   zzz: value-zzz
   yyy: value-yyy
   xxx: value-xxx
-`
-mapSlice := &yaml.MapSlice{}
-yaml.Unmarshal([]byte(yamlString), mapSlice)
-roughYaml := goroughyaml.NewRoughYaml(mapSlice)
+`)
 
 // get value
-fmt.Println(roughYaml.Get("ddd").Get("ccc").Get("a")) // => value-a
-fmt.Println(roughYaml.Get("ddd").Get("bbb").Get("1")) // => 5
+fmt.Printf("%v\n", roughYaml.
+Get("ddd").
+  Get("ccc").
+    Get("a").Value()) // => value-a
+fmt.Printf("%v\n", roughYaml.
+Get("ddd").
+  Get("bbb").
+    Get("1").Value()) // => 5
 
 // set value
 roughYaml.Get("aaa").Set("yyy", nil)
-fmt.Println(roughYaml.Get("aaa").Get("yyy")) // -> nil
+fmt.Printf("%v\n", roughYaml.
+  Get("aaa").
+    Get("yyy").Value()) // -> nil
 
 // print as yaml
 /**
@@ -42,8 +48,7 @@ aaa:
   yyy: null
   xxx: value-xxx
  */
-bytes, _ := yaml.Marshal(roughYaml.GetContents())
-fmt.Printf("%v", string(bytes))
+fmt.Printf("%v", roughYaml.ToYaml())
 ```
 
 ### Features
