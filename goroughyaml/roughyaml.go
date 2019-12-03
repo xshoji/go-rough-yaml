@@ -8,10 +8,8 @@ import (
 )
 
 type roughYaml struct {
-	parent      *roughYaml
 	contents    interface{}
 	currentItem *yaml.MapItem
-	isRoot      bool
 }
 
 func FromYaml(yamlContent string) roughYaml {
@@ -22,27 +20,17 @@ func FromYaml(yamlContent string) roughYaml {
 
 func NewRoughYaml(yamlData interface{}) roughYaml {
 	rootMapItem := yaml.MapItem{Key: "root", Value: yamlData}
-	rootMapSlice := yaml.MapSlice{rootMapItem}
 	orderedMapSlice := roughYaml{
-		parent: &roughYaml{
-			parent:      nil,
-			contents:    rootMapSlice,
-			currentItem: nil,
-			isRoot:      true,
-		},
 		contents:    yamlData,
 		currentItem: &rootMapItem,
-		isRoot:      false,
 	}
 	return orderedMapSlice
 }
 
-func createRoughYaml(parent *roughYaml, item *yaml.MapItem, yamlData interface{}) *roughYaml {
+func createRoughYaml(item *yaml.MapItem, yamlData interface{}) *roughYaml {
 	return &roughYaml{
-		parent:      parent,
 		contents:    yamlData,
 		currentItem: item,
-		isRoot:      false,
 	}
 }
 
@@ -79,18 +67,11 @@ func (o *roughYaml) Value() interface{} {
 	return nil
 }
 
-func (o *roughYaml) Parent() *roughYaml {
-	if o.parent == nil {
-		panic("Parent is nul.")
-	}
-	return o.parent
-}
-
 func (o *roughYaml) Get(key string) *roughYaml {
 	//dumpNode("o.GetContents", o.GetContents())
 	//fmt.Printf(">> o.contents : %T, %v\n", o.contents, o.contents)
 	if o.contents == nil {
-		return createRoughYaml(o, nil, nil)
+		return createRoughYaml(nil, nil)
 	}
 	mapSlice, ok := o.GetContents().(*yaml.MapSlice)
 	//fmt.Printf("-- o.contents.(yaml.MapSlice)\n")
@@ -103,9 +84,9 @@ func (o *roughYaml) Get(key string) *roughYaml {
 			if referencedItem.Key == key {
 				v, ok := referencedItem.Value.(yaml.MapSlice)
 				if ok {
-					return createRoughYaml(o, referencedItem, &v)
+					return createRoughYaml(referencedItem, &v)
 				}
-				return createRoughYaml(o, referencedItem, &item.Value)
+				return createRoughYaml(referencedItem, &item.Value)
 			}
 		}
 	}
@@ -127,13 +108,13 @@ func (o *roughYaml) Get(key string) *roughYaml {
 				if index == key {
 					//fmt.Printf("---- item: %T\n", s.Index(i).Interface())
 					v := yaml.MapItem{Key: nil, Value: s.Index(i).Interface()}
-					return createRoughYaml(o, &v, &v.Value)
+					return createRoughYaml(&v, &v.Value)
 				}
 			}
 		}
 
 	}
-	return createRoughYaml(o, nil, nil)
+	return createRoughYaml(nil, nil)
 }
 
 func (o *roughYaml) Set(key string, value interface{}) {
