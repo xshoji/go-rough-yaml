@@ -169,20 +169,14 @@ func (o *roughYaml) Value() interface{} {
 }
 
 func (o *roughYaml) Get(key string) *roughYaml {
-	//dumpNode("o.GetContents", o.GetContents())
-	//fmt.Printf(">> o.contents : %T, %v\n", o.contents, o.contents)
 	contents := o.GetContents()
 	if contents == nil {
 		return createRoughYamlNil()
 	}
 	mapSlice, ok := contents.(*yaml.MapSlice)
-	//fmt.Printf("-- o.contents.(yaml.MapSlice)\n")
-	//fmt.Printf("---- mapSlice	: %T, %p, %v\n", mapSlice, mapSlice, mapSlice)
-	//fmt.Printf("---- ok : %v\n", ok)
 	if ok {
 		for index := range *mapSlice {
 			referencedItem := &(*mapSlice)[index]
-			//fmt.Printf("---- item.Value: %T, item: %p, key: %v, value: %v, value-pointer: %p, value-pointers pointer: %v\n", referencedItem.Value, referencedItem, referencedItem.Key, referencedItem.Value, referencedItem.Value, &referencedItem.Value)
 			if referencedItem.Key == key {
 				if referencedItem.Value == nil {
 					return createRoughYaml(nil, referencedItem)
@@ -200,22 +194,15 @@ func (o *roughYaml) Get(key string) *roughYaml {
 		}
 	}
 	slice, ok := contents.(*interface{})
-	//fmt.Printf("--o.contents.(*interface{})\n")
-	//fmt.Printf("---- slice : %T, %v\n", slice, slice)
-	//fmt.Printf("---- ok : %v\n", ok)
 	if ok {
 		// > go - range over interface{} which stores a slice - Stack Overflow
 		// > https://stackoverflow.com/questions/14025833/range-over-interface-which-stores-a-slice?answertab=active#tab-top
 		switch reflect.TypeOf(*slice).Kind() {
 		case reflect.Slice:
-			//fmt.Printf(">> slice is slice!\n")
 			s := reflect.ValueOf(*slice)
 			for i := 0; i < s.Len(); i++ {
 				index := strconv.FormatInt(int64(i), 10)
-				//fmt.Printf("---- index : %v, key : %v\n", index, key)
-				//fmt.Printf("---- index == key : %v\n", index == key)
 				if index == key {
-					//fmt.Printf("---- item: %T\n", s.Index(i).Interface())
 					v := yaml.MapItem{Key: nil, Value: s.Index(i).Interface()}
 					return createRoughYaml(&v.Value, &v)
 				}
@@ -234,8 +221,8 @@ func (o *roughYaml) SetForce(key string, value interface{}) {
 }
 
 func (o *roughYaml) setValue(key string, value interface{}, isForce bool) {
-	orderedMapSlice := o.Get(key)
-	if orderedMapSlice.currentItem == nil {
+	childMapSlice := o.Get(key)
+	if childMapSlice.currentItem == nil {
 		if isForce == false {
 			return
 		}
@@ -258,20 +245,15 @@ func (o *roughYaml) setValue(key string, value interface{}, isForce bool) {
 		}
 		newMapSlice = append(newMapSlice, newMapItem)
 		setContentsValue(o, &newMapSlice)
-		orderedMapSlice = o.Get(key)
+		childMapSlice = o.Get(key)
 	}
 
-	setContentsValue(orderedMapSlice, value)
+	setContentsValue(childMapSlice, value)
 }
 
 func setContentsValue(o *roughYaml, value interface{}) {
 	o.contents = value
 	o.currentItem.Value = value
-}
-
-func setContentsSlice(o *roughYaml, slice []interface{}) {
-	o.contents = slice
-	o.currentItem.Value = slice
 }
 
 func (o *roughYaml) Delete(key string) {
@@ -283,13 +265,12 @@ func (o *roughYaml) Delete(key string) {
 	if ok {
 		for index, _ := range *mapSlice {
 			referencedItem := &(*mapSlice)[index]
-			//fmt.Printf("---- item.Value: %T, item: %p, key: %v, value: %v, value-pointer: %p, value-pointers pointer: %v\n", referencedItem.Value, referencedItem, referencedItem.Key, referencedItem.Value, referencedItem.Value, &referencedItem.Value)
 			if referencedItem.Key != key {
 				newMapSlice = append(newMapSlice, *referencedItem)
 			}
 		}
 	}
-	//fmt.Printf("---- newMapSlice: %T, newMapSlice-p: %p, newMapSlice-v: %v\n", newMapSlice, newMapSlice, newMapSlice)
+
 	if len(newMapSlice) == 0 {
 		setContentsValue(o, nil)
 		return
