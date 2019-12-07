@@ -308,6 +308,20 @@ aaa:
 	}
 	t.Logf("actualKey:%v, expectedKey:%v | actualValue:%v, expectedValue:%v\n", actualKey, expectedKey, actualValue, expectedValue)
 	fmt.Printf("---\n%v\n\n", orderedMapSlice.ToYaml())
+
+	//---------------------
+	// success (set new nested value)
+	expectedKey = "ddd"
+	expectedValue = "ddd-value1"
+	orderedMapSlice.Get("aaa").SetForce("111", nil)
+	orderedMapSlice.Get("aaa").Get("111").SetForce(expectedKey.(string), expectedValue.(string))
+	actualKey = orderedMapSlice.Get("aaa").Get("111").Get(expectedKey.(string)).Key().(string)
+	actualValue = orderedMapSlice.Get("aaa").Get("111").Get(expectedKey.(string)).Value().(string)
+	if actualKey != expectedKey || actualValue != expectedValue {
+		t.Errorf("<< FAILED >>>")
+	}
+	t.Logf("actualKey:%v, expectedKey:%v | actualValue:%v, expectedValue:%v\n", actualKey, expectedKey, actualValue, expectedValue)
+	fmt.Printf("---\n%v\n\n", orderedMapSlice.ToYaml())
 }
 
 func TestSetSlice(t *testing.T) {

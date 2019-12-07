@@ -247,15 +247,16 @@ func (o *roughYaml) setValue(valueType string, isForce bool, key string, value i
 		if isForce == false {
 			return
 		}
-		if o.GetContents() == nil {
-			return
-		}
-		content := o.GetContents()
-		mapSlice, ok := content.(*yaml.MapSlice)
 		newMapSlice := yaml.MapSlice{}
 		newMapItem := yaml.MapItem{
 			Key:   key,
 			Value: nil,
+		}
+		content := o.GetContents()
+		mapSlice := &yaml.MapSlice{}
+		ok := true
+		if content != nil {
+			mapSlice, ok = content.(*yaml.MapSlice)
 		}
 		if ok {
 			for index := range *mapSlice {
