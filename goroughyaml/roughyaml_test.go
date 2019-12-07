@@ -45,9 +45,7 @@ aaa:
 	var actualValue interface{}
 	var actualValuePtr *interface{}
 
-	node := &yaml.MapSlice{}
-	yaml.Unmarshal([]byte(yamlString), node)
-	orderedMapSlice := NewRoughYaml(node)
+	orderedMapSlice := FromYaml(yamlString)
 
 	//---------------------
 	// success (yaml.MapSlice)
@@ -96,9 +94,7 @@ aaa:
 	var actualValue interface{}
 	var actualValueList []interface{}
 
-	node := &yaml.MapSlice{}
-	yaml.Unmarshal([]byte(yamlString), node)
-	orderedMapSlice := NewRoughYaml(node)
+	orderedMapSlice := FromYaml(yamlString)
 
 	//---------------------
 	// success (single value)
@@ -195,9 +191,7 @@ aaa:
 	var actualKey interface{}
 	var actualValue interface{}
 
-	node := &yaml.MapSlice{}
-	yaml.Unmarshal([]byte(yamlString), node)
-	orderedMapSlice := NewRoughYaml(node)
+	orderedMapSlice := FromYaml(yamlString)
 
 	//---------------------
 	// success (set value)
@@ -210,8 +204,7 @@ aaa:
 		t.Errorf("<< FAILED >>>")
 	}
 	t.Logf("actualKey:%v, expectedKey:%v | actualValue:%v, expectedValue:%v\n", actualKey, expectedKey, actualValue, expectedValue)
-	bytes, _ := yaml.Marshal(orderedMapSlice.GetContents())
-	fmt.Printf("---\n%v\n\n", string(bytes))
+	fmt.Printf("---\n%v\n\n", orderedMapSlice.ToYaml())
 
 	//---------------------
 	// success (set nil)
@@ -224,8 +217,7 @@ aaa:
 		t.Errorf("<< FAILED >>>")
 	}
 	t.Logf("actualKey:%v, expectedKey:%v | actualValue:%v, expectedValue:%v\n", actualKey, expectedKey, actualValue, expectedValue)
-	bytes, _ = yaml.Marshal(orderedMapSlice.GetContents())
-	fmt.Printf("---\n%v\n\n", string(bytes))
+	fmt.Printf("---\n%v\n\n", orderedMapSlice.ToYaml())
 
 	//---------------------
 	// success (set nil 2)
@@ -238,8 +230,7 @@ aaa:
 		t.Errorf("<< FAILED >>>")
 	}
 	t.Logf("actualKey:%v, expectedKey:%v | actualValue:%v, expectedValue:%v\n", actualKey, expectedKey, actualValue, expectedValue)
-	bytes, _ = yaml.Marshal(orderedMapSlice.GetContents())
-	fmt.Printf("---\n%v\n\n", string(bytes))
+	fmt.Printf("---\n%v\n\n", orderedMapSlice.ToYaml())
 
 	//---------------------
 	// success (set MapSlice)
@@ -256,8 +247,7 @@ aaa:
 		t.Errorf("<< FAILED >>>")
 	}
 	t.Logf("actualKey:%v, expectedKey:%v | actualValue:%v, expectedValue:%v\n", actualKey, expectedKey, actualValue, expectedValue)
-	bytes, _ = yaml.Marshal(orderedMapSlice.GetContents())
-	fmt.Printf("---\n%v\n\n", string(bytes))
+	fmt.Printf("---\n%v\n\n", orderedMapSlice.ToYaml())
 
 	////---------------------
 	//// success (set slice value)
@@ -287,9 +277,7 @@ aaa:
 	var actualKey interface{}
 	var actualValueList []interface{}
 
-	node := &yaml.MapSlice{}
-	yaml.Unmarshal([]byte(yamlString), node)
-	orderedMapSlice := NewRoughYaml(node)
+	orderedMapSlice := FromYaml(yamlString)
 
 	//---------------------
 	// success (set slice)
@@ -302,8 +290,7 @@ aaa:
 		t.Errorf("<< FAILED >>>")
 	}
 	t.Logf("actualKey:%v, expectedKey:%v | actualValueList:%v, expectedValueList:%v\n", actualKey, expectedKey, actualValueList, expectedValueList)
-	bytes, _ := yaml.Marshal(orderedMapSlice.GetContents())
-	fmt.Printf("---\n%v\n\n", string(bytes))
+	fmt.Printf("---\n%v\n\n", orderedMapSlice.ToYaml())
 
 	//---------------------
 	// success (set nested slice)
@@ -316,8 +303,54 @@ aaa:
 		t.Errorf("<< FAILED >>>")
 	}
 	t.Logf("actualKey:%v, expectedKey:%v | actualValueList:%v, expectedValueList:%v\n", actualKey, expectedKey, actualValueList, expectedValueList)
-	bytes, _ = yaml.Marshal(orderedMapSlice.GetContents())
-	fmt.Printf("---\n%v\n\n", string(bytes))
+	fmt.Printf("---\n%v\n\n", orderedMapSlice.ToYaml())
+}
+
+func TestDelete(t *testing.T) {
+	//---------------------
+	// init
+	yamlString := `
+aaa:
+  bbb:
+    ccc-key1: ccc-value1
+    ccc-key2: ccc-value2
+  ddd:
+  - ddd1
+  - ddd2
+`
+
+	var expectedKey interface{}
+	var expectedValue interface{}
+	var actualKey interface{}
+	var actualValue interface{}
+
+	orderedMapSlice := FromYaml(yamlString)
+
+	//---------------------
+	// success (delete key)
+	expectedKey = nil
+	expectedValue = nil
+	orderedMapSlice.Get("aaa").Get("bbb").Delete("ccc-key2")
+	actualKey = orderedMapSlice.Get("aaa").Get("bbb").Get("ccc-key2").Key()
+	actualValue = orderedMapSlice.Get("aaa").Get("bbb").Get("ccc-key2").Value()
+	if actualKey != expectedKey || actualValue != expectedValue {
+		t.Errorf("<< FAILED >>>")
+	}
+	t.Logf("actualKey:%v, expectedKey:%v | actualValue:%v, expectedValue:%v\n", actualKey, expectedKey, actualValue, expectedValue)
+	fmt.Printf("---\n%v\n\n", orderedMapSlice.ToYaml())
+
+	//---------------------
+	// success (delete key2)
+	expectedKey = nil
+	expectedValue = nil
+	orderedMapSlice.Get("aaa").Get("bbb").Delete("ccc-key1")
+	actualKey = orderedMapSlice.Get("aaa").Get("bbb").Get("ccc-key1").Key()
+	actualValue = orderedMapSlice.Get("aaa").Get("bbb").Get("ccc-key1").Value()
+	if actualKey != expectedKey || actualValue != expectedValue {
+		t.Errorf("<< FAILED >>>")
+	}
+	t.Logf("actualKey:%v, expectedKey:%v | actualValue:%v, expectedValue:%v\n", actualKey, expectedKey, actualValue, expectedValue)
+	fmt.Printf("---\n%v\n\n", orderedMapSlice.ToYaml())
 }
 
 func compareSlice(a []interface{}, b []interface{}) bool {
