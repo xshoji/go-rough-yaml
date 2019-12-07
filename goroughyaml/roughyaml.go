@@ -76,7 +76,7 @@ func (o *roughYaml) Value() interface{} {
 
 func (o *roughYaml) Get(key string) *roughYaml {
 	//dumpNode("o.GetContents", o.GetContents())
-	fmt.Printf(">> o.contents : %T, %v\n", o.contents, o.contents)
+	//fmt.Printf(">> o.contents : %T, %v\n", o.contents, o.contents)
 	if o.GetContents() == nil {
 		return createRoughYamlNil()
 	}
@@ -155,15 +155,15 @@ func (o *roughYaml) Delete(key string) {
 	if ok {
 		for index, _ := range *mapSlice {
 			referencedItem := &(*mapSlice)[index]
-			fmt.Printf("---- item.Value: %T, item: %p, key: %v, value: %v, value-pointer: %p, value-pointers pointer: %v\n", referencedItem.Value, referencedItem, referencedItem.Key, referencedItem.Value, referencedItem.Value, &referencedItem.Value)
+			//fmt.Printf("---- item.Value: %T, item: %p, key: %v, value: %v, value-pointer: %p, value-pointers pointer: %v\n", referencedItem.Value, referencedItem, referencedItem.Key, referencedItem.Value, referencedItem.Value, &referencedItem.Value)
 			if referencedItem.Key != key {
 				newMapSlice = append(newMapSlice, *referencedItem)
 			}
 		}
 	}
-	fmt.Printf("---- newMapSlice: %T, newMapSlice-p: %p, newMapSlice-v: %v\n", newMapSlice, newMapSlice, newMapSlice)
+	//fmt.Printf("---- newMapSlice: %T, newMapSlice-p: %p, newMapSlice-v: %v\n", newMapSlice, newMapSlice, newMapSlice)
 	if len(newMapSlice) == 0 {
-		fmt.Printf("newMapSlice : zero !\n")
+		//fmt.Printf("newMapSlice : zero !\n")
 		o.contents = nil
 		o.currentItem.Value = nil
 		return
