@@ -86,6 +86,12 @@
 //
 //   https://github.com/xshoji/go-rough-yaml
 //
+// Copyright
+//
+//   Copyright (c) 2019 xshoji
+//   This software is released under the MIT License.
+//   http://opensource.org/licenses/mit-license.php
+//
 package goroughyaml
 
 import (

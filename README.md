@@ -1,4 +1,4 @@
-# go-rough-yaml
+## go-rough-yaml
 
 go-rough-yaml provides simple accessors to access and edit yaml.  
 This means that you haven't to prepare a struct type.  
@@ -49,3 +49,7 @@ roughYaml.ToYaml()
 - Simple interface
 - Schema-less
 - Preserving order of map structure
+
+## License
+
+MIT
