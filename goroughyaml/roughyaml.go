@@ -89,10 +89,10 @@ func (o *roughYaml) Get(key string) *roughYaml {
 			referencedItem := &(*mapSlice)[index]
 			//fmt.Printf("---- item.Value: %T, item: %p, key: %v, value: %v, value-pointer: %p, value-pointers pointer: %v\n", referencedItem.Value, referencedItem, referencedItem.Key, referencedItem.Value, referencedItem.Value, &referencedItem.Value)
 			if referencedItem.Key == key {
-				v, ok := referencedItem.Value.(yaml.MapSlice)
-				if v == nil {
+				if referencedItem.Value == nil {
 					return createRoughYaml(referencedItem, nil)
 				}
+				v, ok := referencedItem.Value.(yaml.MapSlice)
 				if ok {
 					return createRoughYaml(referencedItem, &v)
 				}
@@ -127,19 +127,23 @@ func (o *roughYaml) Get(key string) *roughYaml {
 }
 
 func (o *roughYaml) Set(key string, value interface{}) {
-	orderedMapSlice := o.Get(key)
-	if orderedMapSlice == nil {
-		return
-	}
-	orderedMapSlice.currentItem.Value = value
+	o.setValue("value", key, value, nil)
 }
 
 func (o *roughYaml) SetSlice(key string, slice []interface{}) {
+	o.setValue("slice", key, nil, slice)
+}
+
+func (o *roughYaml) setValue(valueType string, key string, value interface{}, slice []interface{}) {
 	orderedMapSlice := o.Get(key)
 	if orderedMapSlice == nil {
 		return
 	}
-	orderedMapSlice.currentItem.Value = slice
+	if valueType == "value" {
+		orderedMapSlice.currentItem.Value = value
+	} else if valueType == "slice" {
+		orderedMapSlice.currentItem.Value = slice
+	}
 }
 
 func (o *roughYaml) Delete(key string) {
