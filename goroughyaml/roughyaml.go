@@ -50,8 +50,8 @@
 //
 // Add value
 //
-//    roughYaml.Get("aaa").SetForce("bbb", "value-bbb")
-//    roughYaml.Get("aaa").Get("bbb").Value()) // -> "value-bbb"
+//    roughYaml.Get("aaa").SetForce("ggg", "value-bbb")
+//    roughYaml.Get("aaa").Get("ggg").Value()) // -> "value-ggg"
 //
 //
 // Delete key
