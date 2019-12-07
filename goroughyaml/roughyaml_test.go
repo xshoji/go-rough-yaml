@@ -322,6 +322,20 @@ aaa:
 	}
 	t.Logf("actualKey:%v, expectedKey:%v | actualValue:%v, expectedValue:%v\n", actualKey, expectedKey, actualValue, expectedValue)
 	fmt.Printf("---\n%v\n\n", orderedMapSlice.ToYaml())
+
+	//---------------------
+	// success (set to undefined key)
+	expectedKey = nil
+	expectedValue = nil
+	orderedMapSlice.Get("aaa").Get("aaa").Get("aaa").Get("aaa").SetForce("111", nil)
+	orderedMapSlice.Get("aaa").Get("aaa").Get("aaa").Get("aaa").Get("111").SetForce("ddd", "ddd-value")
+	actualKey = orderedMapSlice.Get("aaa").Get("aaa").Get("aaa").Get("aaa").Get("111").Get("ddd").Key()
+	actualValue = orderedMapSlice.Get("aaa").Get("aaa").Get("aaa").Get("aaa").Get("111").Get("ddd").Value()
+	if actualKey != expectedKey || actualValue != expectedValue {
+		t.Errorf("<< FAILED >>>")
+	}
+	t.Logf("actualKey:%v, expectedKey:%v | actualValue:%v, expectedValue:%v\n", actualKey, expectedKey, actualValue, expectedValue)
+	fmt.Printf("---\n%v\n\n", orderedMapSlice.ToYaml())
 }
 
 func TestSetSlice(t *testing.T) {
@@ -364,6 +378,7 @@ aaa:
 	}
 	t.Logf("actualKey:%v, expectedKey:%v | actualValueList:%v, expectedValueList:%v\n", actualKey, expectedKey, actualValueList, expectedValueList)
 	fmt.Printf("---\n%v\n\n", orderedMapSlice.ToYaml())
+
 }
 
 func TestDelete(t *testing.T) {

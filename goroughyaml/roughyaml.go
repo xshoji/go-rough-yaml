@@ -252,6 +252,9 @@ func (o *roughYaml) setValue(key string, value interface{}, isForce bool) {
 }
 
 func setContentsValue(o *roughYaml, value interface{}) {
+	if o.currentItem == nil {
+		return
+	}
 	o.contents = value
 	o.currentItem.Value = value
 }

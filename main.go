@@ -8,17 +8,7 @@ import (
 func main() {
 	roughYaml := goroughyaml.FromYaml(getSimpleYaml())
 
-	fmt.Printf("development-teams.team-a.pc-app-name1.id : %v\n",
-		roughYaml.Get("development-teams").
-			/*   */ Get("team-a").
-			/*     */ Get("pc-app-name1").
-			/*       */ Get("id").Value())
-
-	fmt.Printf("development-teams.team-a.ranks[0] : %v\n",
-		roughYaml.Get("development-teams").
-			/*   */ Get("team-a").
-			/*     */ Get("ranks").
-			/*       */ Get("0").Value())
+	roughYaml.Get("aaa").Get("aaa").Get("aaa").Get("aaa").Get("aaa").Get("aaa").SetForce("bbb", "ccc")
 
 	fmt.Printf("print yaml :\n %v", roughYaml.ToYaml())
 }
