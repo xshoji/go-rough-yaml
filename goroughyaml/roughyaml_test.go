@@ -343,7 +343,7 @@ aaa:
 	// success (set slice)
 	expectedKey = "bbb1"
 	expectedValueList = []interface{}{"aaa", "bbb", "ccc"}
-	orderedMapSlice.Get("aaa").Get("bbb").SetSlice("bbb1", []interface{}{"aaa", "bbb", "ccc"})
+	orderedMapSlice.Get("aaa").Get("bbb").Set("bbb1", []interface{}{"aaa", "bbb", "ccc"})
 	actualKey = orderedMapSlice.Get("aaa").Get("bbb").Get("bbb1").Key().(string)
 	actualValueList = orderedMapSlice.Get("aaa").Get("bbb").Get("bbb1").Value().([]interface{})
 	if actualKey != expectedKey || !compareSlice(actualValueList, expectedValueList) {
@@ -356,7 +356,7 @@ aaa:
 	// success (set nested slice)
 	expectedKey = "bbb1"
 	expectedValueList = []interface{}{"aaa", "bbb", []interface{}{"ccc", "ddd", "eee"}}
-	orderedMapSlice.Get("aaa").Get("bbb").SetSlice("bbb1", []interface{}{"aaa", "bbb", []interface{}{"ccc", "ddd", "eee"}})
+	orderedMapSlice.Get("aaa").Get("bbb").Set("bbb1", []interface{}{"aaa", "bbb", []interface{}{"ccc", "ddd", "eee"}})
 	actualKey = orderedMapSlice.Get("aaa").Get("bbb").Get("bbb1").Key().(string)
 	actualValueList = orderedMapSlice.Get("aaa").Get("bbb").Get("bbb1").Value().([]interface{})
 	if actualKey != expectedKey || !compareSlice(actualValueList, expectedValueList) {

@@ -6,19 +6,22 @@ import (
 )
 
 func main() {
-	roughYaml := goroughyaml.FromYaml(getSimpleYaml())
 
-	fmt.Printf("development-teams.team-a.pc-app-name1.id : %v\n",
-		roughYaml.Get("development-teams").
-			/*   */ Get("team-a").
-			/*     */ Get("pc-app-name1").
-			/*       */ Get("id").Value())
+	roughYaml := goroughyaml.FromYaml(``)
+	roughYaml.SetForce("zzz", nil)
+	roughYaml.Get("zzz").SetForce("ccc", "ccc-value1")
+	roughYaml.Get("zzz").SetForce("bbb", "bbb-value2")
+	roughYaml.Get("zzz").SetForce("aaa", "aaa-value3")
+	roughYaml.Get("zzz").SetForce("test", []interface{}{"a", "a", "a"})
+	roughYaml.SetForce("yyy", nil)
+	roughYaml.Get("yyy").SetForce("ccc", "ccc-value1")
+	roughYaml.Get("yyy").SetForce("bbb", "bbb-value2")
+	roughYaml.Get("yyy").SetForce("aaa", "aaa-value3")
+	roughYaml.Get("yyy").SetForce("test2", []interface{}{"a", "a", "a"})
 
-	fmt.Printf("development-teams.team-a.ranks[0] : %v\n",
-		roughYaml.Get("development-teams").
-			/*   */ Get("team-a").
-			/*     */ Get("ranks").
-			/*       */ Get("0").Value())
+	fmt.Printf("print yaml :\n %v", roughYaml.ToYaml())
+
+	roughYaml.Delete("zzz")
 
 	fmt.Printf("print yaml :\n %v", roughYaml.ToYaml())
 }

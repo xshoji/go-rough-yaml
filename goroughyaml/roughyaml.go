@@ -226,22 +226,14 @@ func (o *roughYaml) Get(key string) *roughYaml {
 }
 
 func (o *roughYaml) Set(key string, value interface{}) {
-	o.setValue("value", false, key, value, nil)
-}
-
-func (o *roughYaml) SetSlice(key string, slice []interface{}) {
-	o.setValue("slice", false, key, nil, slice)
+	o.setValue(key, value, false)
 }
 
 func (o *roughYaml) SetForce(key string, value interface{}) {
-	o.setValue("value", true, key, value, nil)
+	o.setValue(key, value, true)
 }
 
-func (o *roughYaml) SetSliceForce(key string, slice []interface{}) {
-	o.setValue("slice", true, key, nil, slice)
-}
-
-func (o *roughYaml) setValue(valueType string, isForce bool, key string, value interface{}, slice []interface{}) {
+func (o *roughYaml) setValue(key string, value interface{}, isForce bool) {
 	orderedMapSlice := o.Get(key)
 	if orderedMapSlice.currentItem == nil {
 		if isForce == false {
@@ -269,11 +261,7 @@ func (o *roughYaml) setValue(valueType string, isForce bool, key string, value i
 		orderedMapSlice = o.Get(key)
 	}
 
-	if valueType == "value" {
-		setContentsValue(orderedMapSlice, value)
-	} else if valueType == "slice" {
-		setContentsSlice(orderedMapSlice, slice)
-	}
+	setContentsValue(orderedMapSlice, value)
 }
 
 func setContentsValue(o *roughYaml, value interface{}) {
