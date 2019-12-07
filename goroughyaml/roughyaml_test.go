@@ -264,6 +264,52 @@ aaa:
 	//fmt.Printf("---\n%v\n\n", string(bytes))
 }
 
+func TestSetForce(t *testing.T) {
+	//---------------------
+	// init
+	yamlString := `
+aaa:
+  bbb:
+    bbb1: bbb
+    bbb2: 111
+  ccc:
+  - 1
+  - 2
+`
+	var expectedKey interface{}
+	var expectedValue interface{}
+	var actualKey interface{}
+	var actualValue interface{}
+
+	orderedMapSlice := FromYaml(yamlString)
+
+	//---------------------
+	// success (set value)
+	expectedKey = "ccc"
+	expectedValue = "ccc-value1"
+	orderedMapSlice.Get("aaa").SetForce(expectedKey.(string), expectedValue.(string))
+	actualKey = orderedMapSlice.Get("aaa").Get(expectedKey.(string)).Key().(string)
+	actualValue = orderedMapSlice.Get("aaa").Get(expectedKey.(string)).Value().(string)
+	if actualKey != expectedKey || actualValue != expectedValue {
+		t.Errorf("<< FAILED >>>")
+	}
+	t.Logf("actualKey:%v, expectedKey:%v | actualValue:%v, expectedValue:%v\n", actualKey, expectedKey, actualValue, expectedValue)
+	fmt.Printf("---\n%v\n\n", orderedMapSlice.ToYaml())
+
+	//---------------------
+	// success (set new value)
+	expectedKey = "ddd"
+	expectedValue = "ddd-value1"
+	orderedMapSlice.Get("aaa").SetForce(expectedKey.(string), expectedValue.(string))
+	actualKey = orderedMapSlice.Get("aaa").Get(expectedKey.(string)).Key().(string)
+	actualValue = orderedMapSlice.Get("aaa").Get(expectedKey.(string)).Value().(string)
+	if actualKey != expectedKey || actualValue != expectedValue {
+		t.Errorf("<< FAILED >>>")
+	}
+	t.Logf("actualKey:%v, expectedKey:%v | actualValue:%v, expectedValue:%v\n", actualKey, expectedKey, actualValue, expectedValue)
+	fmt.Printf("---\n%v\n\n", orderedMapSlice.ToYaml())
+}
+
 func TestSetSlice(t *testing.T) {
 	//---------------------
 	// init
