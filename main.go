@@ -20,7 +20,11 @@ func main() {
 			/*     */ Get("ranks").
 			/*       */ Get("0").Value())
 
-	fmt.Printf("print yaml :\n %v", roughYaml.ToYaml())
+	yamlString, err := roughYaml.ToYaml()
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Printf("---\n%v\n\n", yamlString)
 }
 
 func getSimpleYaml() string {
