@@ -39,7 +39,6 @@ ddd:
     c: value-c
   bbb:
   - 10
-aaa: null
  */
 roughYaml.ToYaml()
 ```

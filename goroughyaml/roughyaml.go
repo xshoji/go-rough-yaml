@@ -135,9 +135,12 @@ func createRoughYamlNil() *roughYaml {
 	}
 }
 
-func (o *roughYaml) ToYaml() string {
-	bytes, _ := yaml.Marshal(o.GetContents())
-	return string(bytes)
+func (o *roughYaml) ToYaml() (string, error) {
+	bytes, err := yaml.Marshal(o.GetContents())
+	if err != nil {
+		return "", err
+	}
+	return string(bytes), nil
 }
 
 func (o *roughYaml) GetContents() interface{} {
