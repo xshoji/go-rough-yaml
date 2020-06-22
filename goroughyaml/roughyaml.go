@@ -102,8 +102,11 @@ import (
 )
 
 type roughYaml struct {
-	contents    interface{}
-	currentItem *yaml.MapItem
+	contents            interface{}
+	currentItem         *yaml.MapItem
+	isListCurrentItem   bool
+	currentIndex        int
+	liseSizeCurrentItem int
 }
 
 func FromYaml(yamlContent string) roughYaml {
@@ -115,24 +118,52 @@ func FromYaml(yamlContent string) roughYaml {
 func newRoughYaml(yamlData interface{}) roughYaml {
 	rootMapItem := yaml.MapItem{Key: "root", Value: yamlData}
 	orderedMapSlice := roughYaml{
-		contents:    yamlData,
-		currentItem: &rootMapItem,
+		contents:            yamlData,
+		currentItem:         &rootMapItem,
+		isListCurrentItem:   isList(yamlData),
+		currentIndex:        -1,
+		liseSizeCurrentItem: getSize(yamlData),
 	}
 	return orderedMapSlice
 }
 
 func createRoughYaml(yamlContents interface{}, item *yaml.MapItem) *roughYaml {
 	return &roughYaml{
-		contents:    yamlContents,
-		currentItem: item,
+		contents:            yamlContents,
+		currentItem:         item,
+		isListCurrentItem:   isList(yamlContents),
+		currentIndex:        -1,
+		liseSizeCurrentItem: getSize(yamlContents),
 	}
 }
 
 func createRoughYamlNil() *roughYaml {
-	return &roughYaml{
-		contents:    nil,
-		currentItem: nil,
+	return createRoughYaml(nil, nil)
+}
+
+func isList(value interface{}) bool {
+	contents := getContents(value)
+	slice, ok := contents.(*interface{})
+	if ok {
+		switch reflect.TypeOf(*slice).Kind() {
+		case reflect.Slice:
+			return true
+		}
 	}
+	return false
+}
+
+func getSize(value interface{}) int {
+	contents := getContents(value)
+	slice, ok := contents.(*interface{})
+	if ok {
+		switch reflect.TypeOf(*slice).Kind() {
+		case reflect.Slice:
+			s := reflect.ValueOf(*slice)
+			return s.Len()
+		}
+	}
+	return 0
 }
 
 func (o *roughYaml) ToYaml() (string, error) {
@@ -152,6 +183,17 @@ func (o *roughYaml) GetContents() interface{} {
 		return v
 	}
 	return o.contents
+}
+
+func getContents(value interface{}) interface{} {
+	if value == nil {
+		return nil
+	}
+	v, ok := value.(*yaml.MapSlice)
+	if ok {
+		return v
+	}
+	return value
 }
 
 func (o *roughYaml) Key() interface{} {
@@ -206,7 +248,18 @@ func (o *roughYaml) Get(key string) *roughYaml {
 			for i := 0; i < s.Len(); i++ {
 				index := strconv.FormatInt(int64(i), 10)
 				if index == key {
-					v := yaml.MapItem{Key: nil, Value: s.Index(i).Interface()}
+					interfaceValue := s.Index(i).Interface()
+					mapSlicePointer, ok := interfaceValue.(*yaml.MapSlice)
+					if ok {
+						v := yaml.MapItem{Key: nil, Value: mapSlicePointer}
+						return createRoughYaml(mapSlicePointer, &v)
+					}
+					mapSliceValue, ok := interfaceValue.(yaml.MapSlice)
+					if ok {
+						v := yaml.MapItem{Key: nil, Value: mapSliceValue}
+						return createRoughYaml(&mapSliceValue, &v)
+					}
+					v := yaml.MapItem{Key: nil, Value: interfaceValue}
 					return createRoughYaml(&v.Value, &v)
 				}
 			}
@@ -283,6 +336,25 @@ func (o *roughYaml) Delete(key string) {
 	}
 
 	setContentsValue(o, newMapSlice)
+}
+
+func (o *roughYaml) HasNext() bool {
+	if !o.isListCurrentItem {
+		return false
+	}
+	if o.currentIndex+1 >= o.liseSizeCurrentItem {
+		return false
+	}
+	return true
+}
+
+func (o *roughYaml) Next() *roughYaml {
+	if o.currentIndex+1 >= o.liseSizeCurrentItem {
+		return createRoughYamlNil()
+	}
+	o.currentIndex++
+	index := strconv.Itoa(o.currentIndex)
+	return o.Get(index)
 }
 
 func dumpNode(name string, node interface{}) {

@@ -631,6 +631,76 @@ func compareSlice(a []interface{}, b []interface{}) bool {
 	return true
 }
 
+func TestNext(t *testing.T) {
+	//---------------------
+	// init
+	yamlString := `
+aaa:
+  bbb:
+    bbb1: bbb
+    bbb2: 111
+  ccc:
+    - '1'
+    - '2'
+    - c
+  ddd:
+    - 3
+    - 
+      - 4
+      - 5
+  eee:
+    - 
+      aaa: aaa1
+      bbb: 
+        - bbb1
+        - bbb2
+    - 
+      aaa: aaa2
+      bbb: 
+        - bbb3
+        - bbb4
+`
+	roughYaml := FromYaml(yamlString)
+
+	//
+	//
+	//---------------------
+	// success (yaml.MapSlice)
+	v1 := roughYaml.Get("aaa").Get("ccc")
+	for v1.HasNext() {
+		n := v1.Next()
+		v := n.Value().(string)
+		if v != "1" && v != "2" && v != "c" {
+			t.Errorf("<< FAILED >>> : roughYaml.Get(\"aaa\").Get(\"bbb\").Get(\"ccc\")")
+		}
+		t.Logf("%v\n", v)
+	}
+
+	v1 = roughYaml.Get("aaa").Get("ddd").Get("1")
+	for v1.HasNext() {
+		n := v1.Next()
+		v := n.Value().(int)
+		if v != 4 && v != 5 {
+			t.Errorf("<< FAILED >>> : roughYaml.Get(\"aaa\").Get(\"bbb\").Get(\"ddd\").Get(\"1\")")
+		}
+		t.Logf("%v\n", v)
+	}
+
+	v1 = roughYaml.Get("aaa").Get("eee")
+	for v1.HasNext() {
+		v2 := v1.Next()
+		v3 := v2.Get("bbb")
+		for v3.HasNext() {
+			n := v3.Next()
+			v := n.Value().(string)
+			if v != "bbb1" && v != "bbb2" && v != "bbb3" && v != "bbb4" {
+				t.Errorf("<< FAILED >>> : roughYaml.Get(\"aaa\").Get(\"bbb\").Get(\"ddd\").Get(\"1\")")
+			}
+			t.Logf("%v\n", v)
+		}
+	}
+}
+
 func toSlice(value interface{}) []interface{} {
 	slice := make([]interface{}, 0)
 	switch reflect.TypeOf(value).Kind() {
