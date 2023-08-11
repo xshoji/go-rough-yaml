@@ -2,96 +2,91 @@
 // This means that you haven't to prepare a struct type.
 // Additionally, go-rough-yaml preserves an order of map structure, so that when yaml is reverted to string, the keys of map are not sorted.
 //
-// Features
+// # Features
 //
 // - Simple interface
 // - Schema-less
 // - Preserving an order of map structure
 //
-// How to use
+// # How to use
 //
 // Create object
 //
-//    roughYaml := goroughyaml.FromYaml(`
-//    ddd:
-//      ccc:
-//        c: value-c
-//        a: value-a
-//      bbb:
-//      - 10
-//      - 5
-//    aaa:
-//      zzz: value-zzz
-//      yyy: value-yyy
-//      xxx: value-xxx
-//    `)
-//
+//	roughYaml := goroughyaml.FromYaml(`
+//	ddd:
+//	  ccc:
+//	    c: value-c
+//	    a: value-a
+//	  bbb:
+//	  - 10
+//	  - 5
+//	aaa:
+//	  zzz: value-zzz
+//	  yyy: value-yyy
+//	  xxx: value-xxx
+//	`)
 //
 // Get value
 //
-//    roughYaml.
-//    Get("ddd").
-//      Get("ccc").
-//        Get("a").Value()) // => value-a
+//	roughYaml.
+//	Get("ddd").
+//	  Get("ccc").
+//	    Get("a").Value()) // => value-a
 //
-//    roughYaml.
-//    Get("ddd").
-//      Get("bbb").
-//        Get("1").Value()) // => 5
+//	roughYaml.
+//	Get("ddd").
+//	  Get("bbb").
+//	    Get("1").Value()) // => 5
 //
-//    roughYaml.Get("xxx").Value()) // => nil
-//
+//	roughYaml.Get("xxx").Value()) // => nil
 //
 // Set value
 //
-//    roughYaml.Get("aaa").Set("yyy", nil)
-//    roughYaml.Get("aaa").Get("yyy").Value()) // -> nil
-//
+//	roughYaml.Get("aaa").Set("yyy", nil)
+//	roughYaml.Get("aaa").Get("yyy").Value()) // -> nil
 //
 // Add value
 //
-//    roughYaml.Get("aaa").SetForce("ggg", "value-bbb")
-//    roughYaml.Get("aaa").Get("ggg").Value()) // -> "value-ggg"
-//
+//	roughYaml.Get("aaa").SetForce("ggg", "value-bbb")
+//	roughYaml.Get("aaa").Get("ggg").Value()) // -> "value-ggg"
 //
 // Delete key
 //
-//    roughYaml.Delete("ddd")
-//    roughYaml.Get("ddd").Value()) // -> nil
-//    /**
-//      aaa:
-//        zzz: value-zzz
-//        yyy: null
-//        xxx: value-xxx
-//    */
+//	roughYaml.Delete("ddd")
+//	roughYaml.Get("ddd").Value()) // -> nil
+//	/**
+//	  aaa:
+//	    zzz: value-zzz
+//	    yyy: null
+//	    xxx: value-xxx
+//	*/
 //
 // Print as yaml
 //
-//    roughYaml.ToYaml()
-//    /**
-//      ddd:
-//        ccc:
-//          c: value-c
-//          a: value-a
-//        bbb:
-//        - 10
-//        - 5
-//      aaa:
-//        zzz: value-zzz
-//        yyy: null
-//        xxx: value-xxx
-//    */
+//	roughYaml.ToYaml()
+//	/**
+//	  ddd:
+//	    ccc:
+//	      c: value-c
+//	      a: value-a
+//	    bbb:
+//	    - 10
+//	    - 5
+//	  aaa:
+//	    zzz: value-zzz
+//	    yyy: null
+//	    xxx: value-xxx
+//	*/
 //
 // Source code and other details for the project are available at GitHub:
 //
-//   https://github.com/xshoji/go-rough-yaml
+//	https://github.com/xshoji/go-rough-yaml
 //
 // Copyright
 //
-//   Copyright (c) 2019 xshoji
-//   This software is released under the MIT License.
-//   http://opensource.org/licenses/mit-license.php
-//
+//	Copyright (c) 2019 xshoji
+//	This software is released under the MIT License.
+//	http://opensource.org/licenses/mit-license.php
 package goroughyaml
 
 import (
@@ -279,7 +274,7 @@ func (o *roughYaml) SetForce(key string, value interface{}) {
 func (o *roughYaml) setValue(key string, value interface{}, isForce bool) {
 	childMapSlice := o.Get(key)
 	if childMapSlice.currentItem == nil {
-		if isForce == false {
+		if !isForce {
 			return
 		}
 		newMapSlice := yaml.MapSlice{}
@@ -322,7 +317,7 @@ func (o *roughYaml) Delete(key string) {
 	mapSlice, ok := o.GetContents().(*yaml.MapSlice)
 	newMapSlice := yaml.MapSlice{}
 	if ok {
-		for index, _ := range *mapSlice {
+		for index := range *mapSlice {
 			referencedItem := &(*mapSlice)[index]
 			if referencedItem.Key != key {
 				newMapSlice = append(newMapSlice, *referencedItem)

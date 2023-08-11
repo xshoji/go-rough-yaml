@@ -64,7 +64,7 @@ aaa:
 	//
 	//---------------------
 	// success (slice)
-	actualValuePtr, ok = roughYamlObj.Get("aaa").Get("ccc").GetContents().(*interface{})
+	actualValuePtr, _ = roughYamlObj.Get("aaa").Get("ccc").GetContents().(*interface{})
 	fmt.Printf("%v\n", reflect.TypeOf(*actualValuePtr).Kind())
 	switch reflect.TypeOf(*actualValuePtr).Kind() {
 	case reflect.Slice:
@@ -617,7 +617,7 @@ func compareSlice(a []interface{}, b []interface{}) bool {
 	if len(a) != len(b) {
 		return false
 	}
-	for i, _ := range a {
+	for i := range a {
 		v := a[i]
 		switch reflect.TypeOf(v).Kind() {
 		case reflect.Slice:
